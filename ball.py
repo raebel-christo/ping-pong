@@ -90,9 +90,23 @@ class ball:
             print(f"Ball has hit p2 panel at {self.index}")
             return 2
         elif not self.isRight and self.index-1 == player1.pixelA or self.index-1 == player1.pixelB:
+            print(f"Ball has hit p1 panel at {self.index}")
             return 1
         else:
             return 0
+
+    def updatePos(self):
+        if self.isRight:
+            self.x = self.x + 1
+        else:
+            self.x = self.x - 1
+        if self.isFalling:
+            self.y = self.y + 1
+        else:
+            self.y = self.y - 1
+
+        self.index = self.toIndex()
+
 
     #-------Ball Game Logic----------
     def game(self,player1,player2):
@@ -112,30 +126,15 @@ class ball:
         if c == 2:
             self.isRight = False
 
-        if self.isRight:
-           self.x = self.x + 1
-        else:
-            self.x = self.x - 1
-        if self.isFalling:
-            self.y = self.y + 1
-        else:
-            self.y = self.y - 1
-
-        self.index = self.toIndex()
+        self.updatePos()
 
         if self.index == player1.pixelA or self.index == player1.pixelB or self.index == player2.pixelA or self.index == player2.pixelB:
             self.isRight = not self.isRight
             self.isFalling = not self.isFalling 
-            if self.isRight:
-                self.x = self.x + 1
-            else:
-                self.x = self.x - 1
-            if self.isFalling:
-                self.y = self.y + 1
-            else:
-                self.y = self.y - 1
+            self.updatePos()
+            self.updatePos()
 
-        self.index = self.toIndex()
+
         led.fill((0,0,0))
         led[player1.pixelA] = (player1.r,player1.g,player1.b)
         led[player1.pixelB] = (player1.r,player1.g,player1.b)
