@@ -136,10 +136,8 @@ class ball:
 
 
         led.fill((0,0,0))
-        led[player1.pixelA] = (player1.r,player1.g,player1.b)
-        led[player1.pixelB] = (player1.r,player1.g,player1.b)
-        led[player2.pixelA] = (player2.r,player2.g,player2.b)
-        led[player2.pixelB] = (player2.r,player2.g,player2.b)
+        player1.update()
+        player2.update()
         led[self.index] = (0,val,0)
         led.show()
         return -1
