@@ -132,6 +132,9 @@ class ball:
             self.isRight = not self.isRight
             self.isFalling = not self.isFalling 
             self.updatePos()
+            if self.isVertBound():
+                self.isFalling = True
+            
             self.updatePos()
 
 
