@@ -142,6 +142,8 @@ class ball:
         player1.update()
         player2.update()
         led[self.index] = (0,val,0)
+        player1.update()
+        player2.update()
         led.show()
         return -1
             
@@ -156,6 +158,10 @@ p2 = panel(47,0,10,10)
 print(b)
 while True:
     state = b.game(p1,p2)
+    var = int(input("input: "))
+    if var == 1:
+        p1.move(1)
+        print(var)
     if state == 0:
         print("PLAYER 2 scores a point")
         time.sleep(5)
