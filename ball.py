@@ -158,11 +158,10 @@ while True:
     state = b.game(p1,p2)
     if state == 0:
         print("PLAYER 2 scores a point")
-        time.sleep(5)
+        time.sleep(2)
     if state == 1:
         print("PLAYER 1 scores a point")
-        time.sleep(5)
+        time.sleep(2)
     if state == 0 or state == 1:
-        ball.x = x
-        ball.y = y
+        b = ball(x,y)
     time.sleep(refreshRate)
