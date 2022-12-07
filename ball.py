@@ -2,6 +2,7 @@ import board
 import neopixel as np
 import time
 import sys
+from threading import *
 
 
 # Declarations
@@ -148,6 +149,14 @@ class ball:
         return -1
             
 
+def getInput(player1,player2):
+    while(True):
+        c = input()
+        print("User input: " + c)
+        if c == '1':
+            player1.move(1)
+        if c == '0':
+            player1.move(0)
 
 x = int(sys.argv[1])
 y = int(sys.argv[2])
@@ -155,13 +164,12 @@ b = ball(x,y)
 p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10)
 
+t1 = Thread(target=getInput,args=(p1,p2))
+t1.setDaemon(True)
+t1.start()
 print(b)
 while True:
     state = b.game(p1,p2)
-    var = int(input("input: "))
-    if var == 1:
-        p1.move(1)
-        print(var)
     if state == 0:
         print("PLAYER 2 scores a point")
         time.sleep(5)
@@ -169,6 +177,5 @@ while True:
         print("PLAYER 1 scores a point")
         time.sleep(5)
     if state == 0 or state == 1:
-        ball.x = x
-        ball.y = y
+        b = ball(x,y)
     time.sleep(refreshRate)
