@@ -3,12 +3,15 @@ import neopixel as np
 import time
 import sys
 from threading import *
+from sshkeyboard import listen_keyboard
 
+print(board.__file__)
+print(np.__file__)
 
 # Declarations
 led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
 val = 20
-refreshRate = 0.35
+refreshRate = 0.2
 
 
 # ------------Class definition Player Panels------------
@@ -28,7 +31,7 @@ class panel:
         if dir == 0 and (self.pixelA-8>=0):
             self.pixelB = self.pixelA
             self.pixelA = self.pixelA - 8
-        if dir == 1 and (self.pixelB+8<=56):
+        if dir == 1 and (self.pixelB+8<=63):
             self.pixelA = self.pixelB
             self.pixelB = self.pixelB + 8
 
@@ -37,6 +40,7 @@ class panel:
         led[self.pixelB] = (self.r,self.g,self.b)
         led.show()
 
+#-------------ball definition----------------
 class ball:
     def __init__(self, x, y):
         self.x = x
@@ -112,7 +116,7 @@ class ball:
     #-------Ball Game Logic----------
     def game(self,player1,player2):
         if self.isVertBound():
-            if self.index < 7:
+            if self.index <= 7:
                 self.isFalling = True
             else:
                 self.isFalling = False
@@ -134,7 +138,10 @@ class ball:
             self.isFalling = not self.isFalling 
             self.updatePos()
             if self.isVertBound():
-                self.isFalling = True
+                if self.index <= 7:
+                    self.isFalling = True
+                else:
+                    self.isFalling = False
             
             self.updatePos()
 
@@ -147,35 +154,41 @@ class ball:
         player2.update()
         led.show()
         return -1
-            
 
-def getInput(player1,player2):
-    while(True):
-        c = input()
-        print("User input: " + c)
-        if c == '1':
-            player1.move(1)
-        if c == '0':
-            player1.move(0)
+def getInput():
+    listen_keyboard(on_press = controllerInput)
+
 
 x = int(sys.argv[1])
 y = int(sys.argv[2])
+
 b = ball(x,y)
 p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10)
 
-t1 = Thread(target=getInput,args=(p1,p2))
+def controllerInput(key):
+    if key=='w':
+        p1.move(0)
+    if key=='s':
+        p1.move(1)
+    if key=='i':
+        p2.move(0)
+    if key=='k':
+        p2.move(1)
+
+t1 = Thread(target=getInput)
 t1.setDaemon(True)
 t1.start()
+
 print(b)
 while True:
     state = b.game(p1,p2)
     if state == 0:
         print("PLAYER 2 scores a point")
-        time.sleep(5)
+        time.sleep(2)
     if state == 1:
         print("PLAYER 1 scores a point")
-        time.sleep(5)
+        time.sleep(2)
     if state == 0 or state == 1:
         b = ball(x,y)
     time.sleep(refreshRate)
