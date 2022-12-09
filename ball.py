@@ -11,7 +11,7 @@ print(np.__file__)
 # Declarations
 led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
 val = 20
-refreshRate = 0.2
+refreshRate = 0.35
 
 
 # ------------Class definition Player Panels------------
@@ -167,6 +167,7 @@ p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10)
 
 def controllerInput(key):
+    print("input detected")
     if key=='w':
         p1.move(0)
     if key=='s':
