@@ -4,6 +4,7 @@ import time
 import sys
 from threading import *
 from sshkeyboard import listen_keyboard, stop_listening
+from frameMaker import frame
 
 print(board.__file__)
 print(np.__file__)
@@ -13,8 +14,26 @@ led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
 val = 20
 refreshRate = 0.35
 
+#-----------------Bit Maps--------------
+bitmap_P = (
+        0b00000000,
+        0b01111100,
+        0b01000010,
+        0b01000010,
+        0b01111100,
+        0b01000000,
+        0b01000000,
+        0b00000000)
+frame_P = frame(bitmap_P)
 
 # ------------Class definition Player Panels------------
+
+def render(array,r,g,b):
+    led.fill((0,0,0))
+    for i in array.array:
+        led[i] = (r,g,b)
+    led.show()
+
 class panel:
 
     def __init__(self,anchor,r,g,b):
@@ -178,9 +197,12 @@ def controllerInput(key):
 
 t1 = Thread(target=getInput)
 t1.setDaemon(True)
-t1.start()
+t1.start()        
 
 print(b)
+render(frame_P,0,20,0)
+time.sleep(10)
+
 while True:
     state = b.game(p1,p2)
     if state == 0:
