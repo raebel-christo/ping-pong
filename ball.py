@@ -3,7 +3,7 @@ import neopixel as np
 import time
 import sys
 from threading import *
-from sshkeyboard import listen_keyboard
+from sshkeyboard import listen_keyboard, stop_listening
 
 print(board.__file__)
 print(np.__file__)
@@ -156,7 +156,7 @@ class ball:
         return -1
 
 def getInput():
-    listen_keyboard(on_press = controllerInput)
+    listen_keyboard(on_press = controllerInput, on_release = None, delay_second_char = refreshRate-0.04,debug=True)
 
 
 x = int(sys.argv[1])
@@ -167,7 +167,6 @@ p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10)
 
 def controllerInput(key):
-    print("input detected")
     if key=='w':
         p1.move(0)
     if key=='s':
