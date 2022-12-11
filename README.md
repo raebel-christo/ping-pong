@@ -1,6 +1,8 @@
 # Ping Pong
 A Ping Pong ball game that is played on an 8x8 neopixel dot matrix, powered by Raspberry Pi using Python. The panels are controlled by keyboard using the `sshkeyboard` library since the raspberry pi was operated via an ssh terminal and the above mentioned library reads key presses over an ssh terminal.
 
+![20221211_001216](https://user-images.githubusercontent.com/35605103/206886691-bece06c9-ade9-46df-8585-cebd836fd4bf.jpg)
+
 ## Dependancies
 It is required to install the following libraries in order to operate a neopixel grid on raspberry pi. For more details regarding the same, kindly refer to the [adafruit website](https://learn.adafruit.com/neopixels-on-raspberry-pi) on setting up the neopixels with raspberry pi.
 
