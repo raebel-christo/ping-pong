@@ -65,12 +65,12 @@ frame_G = frame(bitmap_G)
 
 bitmap_O = (
     0b00000000,
-    0b00011000,
-    0b01100110,
+    0b00111100,
     0b01000010,
+    0b10000001,
+    0b10000001,
     0b01000010,
-    0b01100110,
-    0b00011000,
+    0b00111100,
     0b00000000
 )
 frame_O = frame(bitmap_O)
@@ -84,9 +84,9 @@ class panel:
         self.r = r
         self.g = g
         self.b = b
-        led[anchor] = (r,g,b)
-        led[anchor+8] = (r,g,b)
-        led.show()
+        #led[anchor] = (r,g,b)
+        #led[anchor+8] = (r,g,b)
+        #led.show()
 
     def move(self, dir):
         if dir == 0 and (self.pixelA-8>=0):
@@ -228,6 +228,9 @@ p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10)
 
 def controllerInput(key):
+    global start_condition
+    global p1
+    global p2
     if not start_condition:
         start_condition = True
     if key=='w':
@@ -244,11 +247,13 @@ t1.setDaemon(True)
 t1.start()        
 
 print(b)
-frames = [frame_P, frame_I, frame_N, frame_G, frame_P, frame_O, frame_N, frame_N, frame_G]
+frames = [frame_P, frame_I, frame_N, frame_G, frame_P, frame_O, frame_N, frame_G]
 while not start_condition:
     for i in frames:
         render(led,i,0,20,0)
-        time.sleep(2)
+        time.sleep(0.4)
+        if start_condition:
+            break
 
 while True:
     state = b.game(p1,p2)
