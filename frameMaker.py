@@ -13,15 +13,9 @@ class frame:
 
         print(self.array)
 
-value = (
-        0b01100110,
-        0b00011000,
-        0b01000010,
-        0b00000000,
-        0b00000000,
-        0b00000000,
-        0b00000000,
-        0b11111111,)
-
-picture = frame(value)
+def render(pixels,array,r,g,b):
+    pixels.fill((0,0,0))
+    for i in array.array:
+        pixels[i] = (r,g,b)
+    pixels.show()
 

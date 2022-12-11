@@ -4,7 +4,7 @@ import time
 import sys
 from threading import *
 from sshkeyboard import listen_keyboard, stop_listening
-from frameMaker import frame
+from frameMaker import frame,render
 
 print(board.__file__)
 print(np.__file__)
@@ -13,26 +13,68 @@ print(np.__file__)
 led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
 val = 20
 refreshRate = 0.35
+start_condition = False
 
-#-----------------Bit Maps--------------
+# -----------------Bit Maps--------------
 bitmap_P = (
-        0b00000000,
-        0b01111100,
-        0b01000010,
-        0b01000010,
-        0b01111100,
-        0b01000000,
-        0b01000000,
-        0b00000000)
+    0b00000000,
+    0b01111000,
+    0b01000100,
+    0b01000100,
+    0b01111000,
+    0b01000000,
+    0b01000000,
+    0b00000000)
 frame_P = frame(bitmap_P)
 
-# ------------Class definition Player Panels------------
+bitmap_I = (
+    0b00000000,
+    0b00111000,
+    0b00010000,
+    0b00010000,
+    0b00010000,
+    0b00010000,
+    0b00111000,
+    0b00000000
+)
+frame_I = frame(bitmap_I)
 
-def render(array,r,g,b):
-    led.fill((0,0,0))
-    for i in array.array:
-        led[i] = (r,g,b)
-    led.show()
+bitmap_N = (
+    0b00000000,
+    0b01000010,
+    0b01100010,
+    0b01010010,
+    0b01001010,
+    0b01000110,
+    0b01000010,
+    0b00000000
+)
+frame_N = frame(bitmap_N)
+
+bitmap_G = (
+    0b00000000,
+    0b00111100,
+    0b01000010,
+    0b01000000,
+    0b01001110,
+    0b01000010,
+    0b00111100,
+    0b00000000
+)
+frame_G = frame(bitmap_G)
+
+bitmap_O = (
+    0b00000000,
+    0b00011000,
+    0b01100110,
+    0b01000010,
+    0b01000010,
+    0b01100110,
+    0b00011000,
+    0b00000000
+)
+frame_O = frame(bitmap_O)
+# ------------Class definition Player Panels------------
 
 class panel:
 
@@ -186,6 +228,8 @@ p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10)
 
 def controllerInput(key):
+    if not start_condition:
+        start_condition = True
     if key=='w':
         p1.move(0)
     if key=='s':
@@ -200,8 +244,11 @@ t1.setDaemon(True)
 t1.start()        
 
 print(b)
-render(frame_P,0,20,0)
-time.sleep(10)
+frames = [frame_P, frame_I, frame_N, frame_G, frame_P, frame_O, frame_N, frame_N, frame_G]
+while not start_condition:
+    for i in frames:
+        render(led,i,0,20,0)
+        time.sleep(2)
 
 while True:
     state = b.game(p1,p2)
