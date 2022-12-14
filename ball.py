@@ -12,7 +12,7 @@ print(np.__file__)
 # Declarations
 led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
 val = 20
-refreshRate = 0.35
+refreshRate = 0.15
 start_condition = False
 scoreA = 0
 scoreB = 0
@@ -204,9 +204,9 @@ bitmap_smile = (
     0b01100110,
     0b01100110,
     0b00000000,
-    0b01000010,
-    0b01000010,
-    0b00111100,
+    0b00100100,
+    0b00100100,
+    0b00011000,
     0b00000000
 )
 frame_smile = frame(bitmap_smile)
