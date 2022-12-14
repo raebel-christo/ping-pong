@@ -14,6 +14,9 @@ led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
 val = 20
 refreshRate = 0.35
 start_condition = False
+scoreA = 0
+scoreB = 0
+SCORE_REFRESH_RATE = 0.75
 
 # -----------------Bit Maps--------------
 bitmap_P = (
@@ -65,15 +68,174 @@ frame_G = frame(bitmap_G)
 
 bitmap_O = (
     0b00000000,
-    0b00111100,
+    0b00111000,
+    0b01000100,
+    0b10000010,
+    0b10000010,
+    0b01000100,
+    0b00111000,
+    0b00000000
+)
+frame_O = frame(bitmap_O)
+
+bitmap_1 = (
+    0b00010000,
+    0b00110000,
+    0b00010000,
+    0b00010000,
+    0b00010000,
+    0b00010000,
+    0b00111000,
+    0b00000000
+)
+frame_1 = frame(bitmap_1)
+
+bitmap_2 = (
+    0b01111110,
+    0b00000010,
+    0b00000010,
+    0b01111110,
+    0b01000000,
+    0b01000000,
+    0b01111110,
+    0b00000000
+ )
+frame_2 = frame(bitmap_2)
+
+bitmap_3 = (
+    0b01111110,
+    0b00000010,
+    0b00000010,
+    0b00011110,
+    0b00000010,
+    0b00000010,
+    0b01111110,
+    0b00000000
+)
+frame_3 = frame(bitmap_3)
+
+bitmap_4 = (
+    0b00001100,
+    0b00010100,
+    0b00100100,
+    0b01000100,
+    0b11111110,
+    0b00000100,
+    0b00000100,
+    0b00000000
+)
+frame_4 = frame(bitmap_4)
+
+bitmap_5 = (
+    0b01111110,
+    0b01000000,
+    0b01000000,
+    0b01111110,
+    0b00000010,
+    0b00000010,
+    0b01111110,
+    0b00000000
+)
+frame_5 = frame(bitmap_5)
+
+bitmap_6 = (
+    0b01111100,
+    0b01000000,
+    0b01000000,
+    0b01111100,
+    0b01000100,
+    0b01000100,
+    0b01111100,
+    0b00000000
+)
+frame_6 = frame(bitmap_6)
+
+bitmap_7 = (
+    0b01111110,
+    0b00000100,
+    0b00001000,
+    0b00010000,
+    0b00010000,
+    0b00010000,
+    0b00010000,
+    0b00000000
+)
+frame_7 = frame(bitmap_7)
+
+
+bitmap_8 = (
+    0b01111110,
     0b01000010,
-    0b10000001,
-    0b10000001,
+    0b01000010,
+    0b01111110,
+    0b01000010,
+    0b01000010,
+    0b01111110,
+    0b00000000
+)
+frame_8 = frame(bitmap_8)
+
+bitmap_9 = (
+    0b01111100,
+    0b01000100,
+    0b01000100,
+    0b01111100,
+    0b00000100,
+    0b00000100,
+    0b01111100,
+    0b00000000
+)
+frame_9 = frame(bitmap_9)
+
+bitmap_0 = (
+    0b00000000,
+    0b01111110,
+    0b01000110,
+    0b01001010,
+    0b01010010,
+    0b01100010,
+    0b01111110,
+    0b00000000
+)
+frame_0 = frame(bitmap_0)
+
+bitmap_smile = (
+    0b00000000,
+    0b01100110,
+    0b01100110,
+    0b00000000,
+    0b01000010,
     0b01000010,
     0b00111100,
     0b00000000
 )
-frame_O = frame(bitmap_O)
+frame_smile = frame(bitmap_smile)
+
+def frame_fetch(val):
+    global frame_0
+    global frame_1
+    global frame_2
+    global frame_3
+    global frame_4
+    global frame_5
+    global frame_6
+    global frame_7
+    global frame_8
+    global frame_9
+    switcher = {
+        0: frame_0,
+        1: frame_1,
+        2: frame_2,
+        3: frame_3,
+        4: frame_4,
+        5: frame_5,
+        6: frame_6,
+        7: frame_7,
+        8: frame_8,
+        9: frame_9
+     }
+
+    return switcher.get(val, -1)
 # ------------Class definition Player Panels------------
 
 class panel:
@@ -233,6 +395,7 @@ def controllerInput(key):
     global p2
     if not start_condition:
         start_condition = True
+        print("Game has begun, reach 9 to win")
     if key=='w':
         p1.move(0)
     if key=='s':
@@ -259,10 +422,28 @@ while True:
     state = b.game(p1,p2)
     if state == 0:
         print("PLAYER 2 scores a point")
-        time.sleep(2)
+        scoreB = scoreB + 1
+        render(led, frame_fetch(scoreA), p1.r, p1.g, p1.b)
+        time.sleep(SCORE_REFRESH_RATE)
+        render(led, frame_fetch(scoreB), p2.r, p2.g, p2.b)
+        time.sleep(SCORE_REFRESH_RATE)
     if state == 1:
         print("PLAYER 1 scores a point")
-        time.sleep(2)
+        scoreA = scoreA + 1
+        render(led, frame_fetch(scoreA), p1.r, p1.g, p1.b)
+        time.sleep(SCORE_REFRESH_RATE)
+        render(led, frame_fetch(scoreB), p2.r, p2.g, p2.b)
+        time.sleep(SCORE_REFRESH_RATE)
     if state == 0 or state == 1:
         b = ball(x,y)
     time.sleep(refreshRate)
+    if scoreA == 9 or scoreB == 9:
+        break
+
+stop_listening()
+t1.join()
+
+if scoreA > scoreB:
+    render(led, frame_smile, p1.r, p1.g, p1.b)
+else:
+    render(led, frame_smile, p2.r, p2.g, p2.b)
