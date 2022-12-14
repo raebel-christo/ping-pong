@@ -3,7 +3,6 @@ import neopixel as np
 import time
 import sys
 from threading import *
-from sshkeyboard import listen_keyboard, stop_listening
 from frameMaker import frame,render
 
 print(board.__file__)
@@ -378,36 +377,12 @@ class ball:
         led.show()
         return -1
 
-def getInput():
-    listen_keyboard(on_press = controllerInput, on_release = None, delay_second_char = refreshRate-0.04,debug=True)
-
-
 x = int(sys.argv[1])
 y = int(sys.argv[2])
 
 b = ball(x,y)
 p1 = panel(8,10,0,10)
-p2 = panel(47,0,10,10)
-
-def controllerInput(key):
-    global start_condition
-    global p1
-    global p2
-    if not start_condition:
-        start_condition = True
-        print("Game has begun, reach 9 to win")
-    if key=='w':
-        p1.move(0)
-    if key=='s':
-        p1.move(1)
-    if key=='i':
-        p2.move(0)
-    if key=='k':
-        p2.move(1)
-
-t1 = Thread(target=getInput)
-t1.setDaemon(True)
-t1.start()        
+p2 = panel(47,0,10,10) 
 
 print(b)
 frames = [frame_P, frame_I, frame_N, frame_G, frame_P, frame_O, frame_N, frame_G]
@@ -440,8 +415,6 @@ while True:
     if scoreA == 9 or scoreB == 9:
         break
 
-stop_listening()
-t1.join()
 
 if scoreA > scoreB:
     render(led, frame_smile, p1.r, p1.g, p1.b)
