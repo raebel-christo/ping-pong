@@ -2,11 +2,38 @@ import board
 import neopixel as np
 import time
 import sys
+import socket
 from threading import *
 from frameMaker import frame,render
 
-print(board.__file__)
-print(np.__file__)
+UDP_TX_IP = "127.0.0.1"
+UDP_TX_PORT = 3000
+
+UDP_RX_IP = "127.0.0.1"
+UDP_RX_PORT = 3001
+
+print("UDP target IP: %s" % UDP_TX_IP)
+print("UDP target port: %s" % UDP_TX_PORT)
+
+sockTX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) 
+sockRX = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
+sockRX.bind((UDP_RX_IP, UDP_RX_PORT))
+
+def iot():
+    global p1
+    global p2
+    while True:
+        data, addr = sockRX.recvfrom(1024)
+        string = data.decode('utf_8')
+        print(string)
+        if (string.find('a0')!=-1):
+            p1.move(0)
+        if (string.find('a1')!=-1):
+            p1.move(1)
+        if (string.find('b0')!=-1):
+            p2.move(0)
+        if (string.find('b1')!=-1):
+            p2.move(1)
 
 # Declarations
 led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
@@ -383,6 +410,9 @@ y = int(sys.argv[2])
 b = ball(x,y)
 p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10) 
+
+t1 = Thread(target = iot)
+t1.start()
 
 print(b)
 frames = [frame_P, frame_I, frame_N, frame_G, frame_P, frame_O, frame_N, frame_G]
