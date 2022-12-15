@@ -22,15 +22,20 @@ sockRX.bind((UDP_RX_IP, UDP_RX_PORT))
 def iot():
     global p1
     global p2
+    global start_condition
     while True:
         data, addr = sockRX.recvfrom(1024)
         string = data.decode('utf_8')
         print(string)
         if (string.find('a0')!=-1):
+            if not start_condition:
+                start_condition = True
             p1.move(0)
         if (string.find('a1')!=-1):
             p1.move(1)
         if (string.find('b0')!=-1):
+            if not start_condition:
+                start_condition = True
             p2.move(0)
         if (string.find('b1')!=-1):
             p2.move(1)
@@ -412,6 +417,7 @@ p1 = panel(8,10,0,10)
 p2 = panel(47,0,10,10) 
 
 t1 = Thread(target = iot)
+t1.setDaemon(True)
 t1.start()
 
 print(b)
