@@ -5,6 +5,7 @@ import sys
 import socket
 from threading import *
 from frameMaker import frame,render
+from sshkeyboard import listen_keyboard, stop_listening
 
 UDP_TX_IP = "127.0.0.1"
 UDP_TX_PORT = 3000
@@ -26,19 +27,24 @@ def iot():
     while True:
         data, addr = sockRX.recvfrom(1024)
         string = data.decode('utf_8')
-        print(string)
-        if (string.find('a0')!=-1):
-            if not start_condition:
-                start_condition = True
-            p1.move(0)
-        if (string.find('a1')!=-1):
-            p1.move(1)
+        #print(string)
         if (string.find('b0')!=-1):
             if not start_condition:
                 start_condition = True
             p2.move(0)
         if (string.find('b1')!=-1):
             p2.move(1)
+
+def controllerInput(key):
+    global start_condition
+    global p1
+    if not start_condition:
+        start_condition = True
+        print("Game has begun")
+    if key=='w':
+        p1.move(0)
+    if key=='s':
+        p1.move(1)
 
 # Declarations
 led = np.NeoPixel(board.D18, 64, brightness=0.2, auto_write=False)
@@ -409,6 +415,9 @@ class ball:
         led.show()
         return -1
 
+def getInput():
+    listen_keyboard(on_press = controllerInput, on_release = None, delay_second_char = refreshRate-0.04)
+
 x = int(sys.argv[1])
 y = int(sys.argv[2])
 
@@ -419,6 +428,10 @@ p2 = panel(47,0,10,10)
 t1 = Thread(target = iot)
 t1.setDaemon(True)
 t1.start()
+
+t2 = Thread(target = getInput)
+t2.setDaemon(True)
+t2.start()
 
 print(b)
 frames = [frame_P, frame_I, frame_N, frame_G, frame_P, frame_O, frame_N, frame_G]
@@ -456,3 +469,8 @@ if scoreA > scoreB:
     render(led, frame_smile, p1.r, p1.g, p1.b)
 else:
     render(led, frame_smile, p2.r, p2.g, p2.b)
+
+stop_listening()
+t2.join()
+t1.join()
+
