@@ -253,7 +253,7 @@
 
   <script>
 
-    const socket = io("http://localhost:8080");
+    const socket = io("192.168.1.100:8080");
 
 
     let up = document.querySelector("arrowUP");
@@ -265,7 +265,7 @@
 
 
     function mouseUp1() {
-      socket.emit("pressed", "up p");
+      socket.emit("pressed", "b0");
       console.log("up p");
 
     }
@@ -275,7 +275,7 @@
     }
 
     function mouseUp2() {
-      socket.emit("pressed", "down p");
+      socket.emit("pressed", "b1");
       console.log("down p");
 
     }
