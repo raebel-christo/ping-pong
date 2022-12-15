@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <title>Project</title>
+
+</head>
+
+<body>
+
+  <div class="Heading">
+    <h1>PING PONG</h1>
+  </div>
+
+
+  <div class="control">
+    <div id="arrowUP" onTouchStart="mouseUp1()" onTouchEnd="mouseDown1()">
+      <div class="arrowSliding1">
+        <div class="arrow1"></div>
+      </div>
+      <div class="arrowSliding1 delay1">
+        <div class="arrow1"></div>
+      </div>
+      <div class="arrowSliding1 delay2">
+        <div class="arrow1"></div>
+      </div>
+      <div class="arrowSliding1 delay3">
+        <div class="arrow1"></div>
+      </div>
+    </div>
+
+    <div id="arrowDOWN" onTouchStart="mouseUp2()" onTouchEnd="mouseDown2()">
+      <div class="arrowSliding2">
+        <div class="arrow2"></div>
+      </div>
+      <div class="arrowSliding2 delay1">
+        <div class="arrow2"></div>
+      </div>
+      <div class="arrowSliding2 delay2">
+        <div class="arrow2"></div>
+      </div>
+      <div class="arrowSliding2 delay3">
+        <div class="arrow2"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .Heading {
+      display: flex;
+      justify-content: center;
+      font-family: monospace;
+    }
+
+    .score {
+      display: flex;
+      justify-content: center;
+      font-family: monospace;
+    }
+
+    .control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin: 0%;
+
+    }
+
+    #arrowUP {
+      width: 50vw;
+      height: 25vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .arrow1 {
+      width: 10vw;
+      height: 10vw;
+      border: 2.5vw solid;
+      border-color: black transparent transparent black;
+      transform: rotate(45deg);
+    }
+
+
+    .arrowSliding1 {
+      position: absolute;
+      -webkit-animation: slide 4s linear infinite;
+      animation: slide 4s linear infinite;
+    }
+
+    .delay1 {
+      -webkit-animation-delay: 1s;
+      animation-delay: 1s;
+    }
+
+    .delay2 {
+      -webkit-animation-delay: 2s;
+      animation-delay: 2s;
+    }
+
+    .delay3 {
+      -webkit-animation-delay: 3s;
+      animation-delay: 3s;
+    }
+
+    @-webkit-keyframes slide {
+      0% {
+        opacity: 0;
+        transform: translateY(15vw);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translateY(9vw);
+      }
+
+      80% {
+        opacity: 1;
+        transform: translateY(-9vw);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-15vw);
+      }
+    }
+
+    @keyframes slide {
+      0% {
+        opacity: 0;
+        transform: translateY(15vw);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translateY(9vw);
+      }
+
+      80% {
+        opacity: 1;
+        transform: translateY(-9vw);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(-15vw);
+      }
+    }
+
+
+    #arrowDOWN {
+
+      width: 50vw;
+      height: 50vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .arrow2 {
+      width: 10vw;
+      height: 10vw;
+      border: 2.5vw solid;
+      border-color: black transparent transparent black;
+      transform: rotate(225deg);
+    }
+
+
+    .arrowSliding2 {
+      position: absolute;
+      -webkit-animation: slide2 4s linear infinite;
+      animation: slide2 4s linear infinite;
+    }
+
+    .delay1 {
+      -webkit-animation-delay: 1s;
+      animation-delay: 1s;
+    }
+
+    .delay2 {
+      -webkit-animation-delay: 2s;
+      animation-delay: 2s;
+    }
+
+    .delay3 {
+      -webkit-animation-delay: 3s;
+      animation-delay: 3s;
+    }
+
+    @-webkit-keyframes slide2 {
+      0% {
+        opacity: 0;
+        transform: translateY(-15vw);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translateY(-9vw);
+      }
+
+      80% {
+        opacity: 1;
+        transform: translateY(9vw);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(15vw);
+      }
+    }
+
+    @keyframes slide2 {
+      0% {
+        opacity: 0;
+        transform: translateY(-15vw);
+      }
+
+      20% {
+        opacity: 1;
+        transform: translateY(-9vw);
+      }
+
+      80% {
+        opacity: 1;
+        transform: translateY(9vw);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(15vw);
+      }
+    }
+
+    .hold {
+      border: 2.5vw solid;
+      border-color: green transparent transparent green;
+    }
+
+    .release {
+      border: 2.5vw solid;
+      border-color: black transparent transparent black;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+
+  <script>
+
+    const socket = io("http://localhost:8080");
+
+
+    let up = document.querySelector("arrowUP");
+    up.addEventListener("touchstart", mouseUp1);
+    up.addEventListener("touchend", mouseDown1);
+    let down = document.querySelector("arrowDOWN");
+    down.addEventListener("touchstart", mouseUp2);
+    down.addEventListener("touchend", mouseDown2);
+
+
+    function mouseUp1() {
+      socket.emit("pressed", "up p");
+      console.log("up p");
+
+    }
+    function mouseDown1() {
+      socket.emit("pressed", "up r");
+      console.log("up r");
+    }
+
+    function mouseUp2() {
+      socket.emit("pressed", "down p");
+      console.log("down p");
+
+    }
+    function mouseDown2() {
+      socket.emit("pressed", "down r");
+      console.log("down r");
+    }
+
+  </script>
+</body>
+
+</html>
