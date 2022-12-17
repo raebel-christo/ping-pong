@@ -25,4 +25,16 @@ It is **important** to note here that the Raspberry Pi **cannot** supply suffici
 
 ![Alternate Wiring](https://cdn-learn.adafruit.com/assets/assets/000/064/121/medium640/led_strips_raspi_NeoPixel_Level_Shifted_bb.jpg?1540314807)
 
+#### Releases
+There are two releases with different features:
+##### V1.0.0A
+This release uses the default ssh keyboard controls for the players. Player 1 uses `W` and `S`. whereas player 2 uses `I` and `K`.
+##### V1.0.0B
+This release uses default ssh keyboard control for player 1, but player 2 uses a webpage to control the panel. It is required to download the web server package in order to launch the webpage that hosts the controls of player 2.
+
+Required dependancies for webserver:
+- Node JS
+- Cors
+- socket.io
+
 With the setup all complete, go ahead and try that python code. Have fun playing ping pong on a neopixel grid and relive that arcade experience!
